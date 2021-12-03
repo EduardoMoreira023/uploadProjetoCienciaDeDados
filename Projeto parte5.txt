@@ -1,0 +1,57 @@
+#quais são as fabricantes que mais aparecem nos problemas relatados?
+ocorrencias_fabricante = aeronave.groupby('FABRICANTE')['CONTAGEM'].sum().sort_values(ascending = False)
+ocorrencias_fabricante.head(10).plot(kind='barh', figsize=(10,5), color=random.choice(colors), grid=True)
+
+plt.title('QUANTIDADE DE OCORRÊNCIAS POR FABRICANTE\nTotal: ' + str(aeronave['CONTAGEM'].sum()) + ' ocorrências')
+plt.xlabel('QUANTIDADE DE OCORRÊNCIAS NOS ÚLTIMOS 10 ANOS')
+plt.show()
+
+
+#Viagens comerciais regulares tendem a ter mais problemas do que voos fretados?
+
+categoria_aviao = aeronave.groupby('CATEGORIA DE AVIÃO')['CONTAGEM'].sum().sort_values().plot(kind='barh', figsize=(11,7), color=random.choice(colors), alpha=.8, grid = True)
+
+plt.title('QUANTIDADE DE OCORRÊNCIAS DOS ÚLTIMOS 10 ANOS\nAGRUPADAS POR CATEGORIA DE AVIÃO')
+plt.xlabel('QUANTIDADE DE OCORRÊNCIAS')
+plt.show()
+
+#Vamos agora olhar para o momento em que as ocorrências surgiram.
+fase_de_operacao = aeronave.groupby('FASE DE OPERAÇÃO')['CONTAGEM'].sum().sort_values().plot(kind='barh', figsize=(11,7), color=random.choice(colors), grid = True)
+plt.title('QUANTIDADE DE OCORRÊNCIAS POR FASE DE OPERAÇÃO\nTotal: ' + str(aeronave['CONTAGEM'].sum()) + ' ocorrências')
+plt.xlabel('QUANTIDADE DE OCORRÊNCIAS')
+plt.show()
+
+#quais são os tipos de danos que podem ocorrer a uma aeronave? Qual a frequência?
+
+tipo_de_dano = aeronave.groupby('NÍVEL DE DANO')['CONTAGEM'].sum().sort_values().plot(kind='bar', figsize=(11,5), color=random.choice(colors), grid = True)
+
+plt.title('OCORRÊNCIAS DOS ÚLTIMOS 10 ANOS AGRUPADAS\nPOR TIPO DE DANO')
+plt.ylabel('QUANTIDADE DE OCORRÊNCIAS')
+plt.xticks(rotation=0)
+plt.show()
+
+#Por fim, quero saber em quantas ocorrências houveram fatalidades.
+
+fatalidades_maior_que_zero = aeronave[aeronave['QUANTIDADE DE FATALIDADES'] > 0]
+fatalidades = fatalidades_maior_que_zero.groupby('QUANTIDADE DE FATALIDADES')['CONTAGEM'].sum().plot(kind='bar', figsize=(11,5), color=random.choice(colors))
+
+for p in fatalidades.patches:
+    b=p.get_bbox()
+    fatalidades.annotate("{:.0f}".format(b.y1 + b.y0), ((b.x0 + b.x1)/2 - 0.1, b.y1 + 2))
+    
+plt.title('QUANTIDADE DE OCORRÊNCIAS DOS ÚLTIMOS 10 ANOS AGRUPADAS\nPOR QUANTIDADE DE FATALIDADES')
+plt.ylabel('QUANTIDADE DE OCORRÊNCIA')
+plt.xticks(rotation=0)
+plt.show()
+
+
+#Abaixo, você pode conferir as duas linhas onde essas ocorrências se encontram na tabela.
+
+piores_acidentes = aeronave[aeronave['QUANTIDADE DE FATALIDADES'] > 100]
+piores_acidentes
+
+#Linha da ocorrência gerada devido ao acidente do Airbus A-320
+ocorrencia[ocorrencia['CÓDIGO DA OCORRÊNCIA'] == 29859]
+
+#O segundo pior caso completou 10 anos em 29/09/2016, quando um boeing da Gol chocou-se contra jato Legacy que se dirigia para os Estados Unidos.
+ocorrencia[ocorrencia['CÓDIGO DA OCORRÊNCIA'] == 30375]

@@ -1,0 +1,51 @@
+#Visualização dos Dados (Data Visualization)
+
+
+#Cores para serem usadas nos gráficos
+colors = [['#0D47A1','#1565C0','#1976D2','#1E88E5','#2196F3'],
+          ['#311B92','#512DA8','#673AB7','#9575CD','#B39DDB'],
+          ['#1B5E20','#388E3C','#4CAF50','#81C784','#66BB6A'],
+          ['#E65100','#EF6C00','#F57C00','#FB8C00','#FF9800'],
+          ['#3E2723','#4E342E','#5D4037','#6D4C41','#795548'],
+          ['#BF360C','#D84315','#E64A19','#F4511E','#FF5722'],
+          ['#880E4F','#AD1457','#C2185B','#D81B60','#E91E63']
+         ]
+		 
+
+classificacao = ocorrencia.groupby('CLASSIFICAÇÃO')['CONTAGEM'].sum().plot(kind='bar', figsize=(10,5), color=random.choice(colors), alpha=.7)
+
+for p in classificacao.patches:
+    b=p.get_bbox()
+    classificacao.annotate("{:.0f}".format(b.y1 + b.y0), ((b.x0 + b.x1)/2 - 0.03, b.y1 + 15))
+
+plt.xticks(rotation=0)
+plt.xlabel('CLASSIFICAÇÃO DA OCORRÊNCIA')
+plt.ylabel('QUANTIDADE')
+plt.title('QUANTIDADE DE OCORRÊNCIAS POR CLASSIFICAÇÃO \n Total: ' + str(ocorrencia['CONTAGEM'].sum()) + ' ocorrências')
+plt.show()
+
+
+#Quais os tipos de ocorrências que existem e qual foi sua frequência nestes últimos anos?
+
+ax = ocorrencia.groupby('TIPO DE OCORRÊNCIA')['CONTAGEM'].sum().sort_values().plot(kind='barh', color=random.choice(colors), figsize=(10,10))
+
+for p in ax.patches:
+    b=p.get_bbox()
+    ax.annotate("{:.0f}".format(b.x1 + b.x0), (p.get_x() + p.get_width() + 1, p.get_y() - 0.05))
+
+plt.title('QUANTIDADE DE OCORRÊNCIAS AGRUPADAS POR TIPO \n Total: ' + str(ocorrencia['CONTAGEM'].sum()) + ' ocorrências')
+plt.ylabel('TIPO DE OCORRÊNCIA')
+plt.xlabel('QUANTIDADE DE OCORRÊNCIA')
+plt.show()
+
+
+#Como tem sido a progressão desses últimos anos? Tiveram menos ocorrências ou mais?
+
+plotagem_data = ocorrencia.copy()
+plotagem_data['DIA DA OCORRÊNCIA'] = plotagem_data['DIA DA OCORRÊNCIA'].apply(lambda x: x.replace(x,x[0:4]))
+plotagem_data.groupby('DIA DA OCORRÊNCIA')['CONTAGEM'].sum().plot(color='purple', figsize=(12,5), grid=True)
+
+plt.title('QUANTIDADE DE OCORRÊNCIA AO LONGO DOS ANOS \n Total: ' + str(ocorrencia['CONTAGEM'].sum()) + ' ocorrências')
+plt.xlabel('ANO REFERÊNCIA')
+plt.ylabel('QUANTIDADE DE OCORRÊNCIAS')
+plt.show()

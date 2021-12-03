@@ -1,0 +1,44 @@
+#Importando bibliotecas:
+%matplotlib inline
+import pandas as pd #Para criação de DataFrames
+import matplotlib.pyplot as plt #Para plotagem
+import random
+
+
+Leitura dos dataset:
+ocorrencia = pd.read_csv('./dataset/ocorrencia.csv')
+aeronave = pd.read_csv('./dataset/aeronave.csv')
+print('O arquivo \"ocorrencia.csv\" ' + str(ocorrencia.shape[0]) + ' linhas e ' + str(ocorrencia.shape[1]) + ' colunas')
+O arquivo "ocorrencia.csv" 2027 linhas e 19 colunas
+print('O arquivo \"aeronave.csv\" ' + str(aeronave.shape[0]) + ' linhas e ' + str(aeronave.shape[1]) + ' colunas')
+
+
+#Limpeza de Dados (Data Cleaning):
+
+ocorrencia.head(5)
+
+ocorrencia.dtypes
+
+#Colunas do arquivo 'ocorrencia.csv'
+ocorrencia.columns
+
+
+#Retirando colunas que não serão usadas
+ocorrencia.drop(['aerodromo','horario','sera_investigada','comando_investigador',
+                 'relatorio_publicado','dia_publicacao','quantidade_recomendacoes',
+                 'aeronaves_envolvidas','saida_pista','dia_extracao', 'numero_relatorio'], axis = 1, inplace = True)
+				 
+				 
+#Renomeando colunas do dataset ocorrencia.csv
+ocorrencia.columns = ['CÓDIGO DA OCORRÊNCIA','CLASSIFICAÇÃO','TIPO DE OCORRÊNCIA','LOCALIDADE',
+                      'UF','PAÍS','DIA DA OCORRÊNCIA','STATUS DA INVESTIGAÇÃO']
+
+#Inserindo coluna para contagem
+ocorrencia['CONTAGEM'] = 1
+
+
+#Derrubando colunas onde o código da ocorrência é inválido
+ocorrencia['CÓDIGO DA OCORRÊNCIA'].dropna(axis = 0, inplace = True)
+
+
+ocorrencia.head()

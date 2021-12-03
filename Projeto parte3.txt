@@ -1,0 +1,66 @@
+#E quanto aos estados? Quais foram os que mais registraram ocorrências?
+
+ax_estado =  ocorrencia.groupby('UF')['CONTAGEM'].sum().plot(kind='bar', color=random.choice(colors), figsize=(11,5))
+
+plt.xlabel('ESTADO')
+plt.ylabel('QUANTIDADE DE OCORRÊNCIAS')
+plt.title('QUANTIDADE DE OCORRÊNCIAS POR ESTADO\nTotal: ' + str(ocorrencia['CONTAGEM'].sum()) + ' ocorrências')
+plt.xticks(rotation=0)
+plt.show()
+
+
+
+#Limpeza dos Dados (Data Cleaning)
+
+aeronave.head()
+
+
+#A seguir eu retiro as colunas que não me interessam para este projeto.
+
+aeronave.drop(['codigo_aeronave','matricula','codigo_operador','peso_maximo_decolagem',
+               'categoria_registro', 'origem_voo', 'destino_voo', 'dia_extracao'], axis = 1, inplace = True)
+
+aeronave.head()
+
+
+# hora de visualizar como o Python está tratando cada coluna.
+
+aeronave.dtypes
+
+'''
+A função convert_na possui dois argumentos: um DataFrame e sua coluna. 
+Tal Series terá todos os seus valores nulos (NaN) atualizados para o numeral 0.
+'''
+
+def convert_na(dataframe, column):
+    for i in column:
+        dataframe[i].fillna(0, inplace = True)
+
+convert_na(aeronave,['quantidade_fatalidades','quantidade_motores','ano_fabricacao','quantidade_assentos'])
+
+
+'''
+A função convert_dtype possui três argumentos: um DataFrame, uma coluna (Series) e o dtype que o usuário deseja alterar.
+Para cada Series declarada na função, ela irá converter tal coluna para o dtype desejado
+'''
+
+def convert_dtype(dataframe, column, dtype):
+    for i in column:
+        dataframe[i] = dataframe[i].astype(dtype)
+
+convert_dtype(aeronave,['quantidade_motores','quantidade_assentos','ano_fabricacao','quantidade_fatalidades'],int)
+
+
+
+#Declaradas as funções e realizada as devidas alterações nas colunas
+
+#Dtypes de float alterados para int
+aeronave.dtypes
+
+#O próximo passo é renomear todas as colunas restantes nesse DataFrame para podermos ter uma visualização melhor.
+
+aeronave.columns = ['CÓDIGO DA OCORRÊNCIA','EQUIPAMENTO','FABRICANTE','MODELO','TIPO DE MOTOR','QUANTIDADE DE MOTORES',
+                    'QUANTIDADE DE ASSENTOS','ANO DE FABRICAÇÃO','PAÍS DE REGISTRO','CATEGORIA DE AVIÃO','FASE DE OPERAÇÃO',
+                    'TIPO DE OPERAÇÃO','NÍVEL DE DANO','QUANTIDADE DE FATALIDADES']
+aeronave = aeronave.apply(lambda x: x.replace('***','NÃO IDENTIFICADO'))
+aeronave['CONTAGEM'] = 1
